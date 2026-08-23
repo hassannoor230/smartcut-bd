@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "cd ../client && npm install && npm run build && cd .. && tsc",
+    "build": "tsc",
     "start": "node dist/server.js",
     "create-admin": "tsx src/scripts/createAdmin.ts",
     "seed": "tsx src/scripts/seed.ts"

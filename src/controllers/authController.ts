@@ -25,10 +25,14 @@ export async function login(req: AuthRequest, res: Response, next: NextFunction)
     admin.lastLogin = new Date();
     await admin.save();
 
+    const signOptions: SignOptions = {
+      expiresIn: env.JWT_EXPIRES_IN as SignOptions['expiresIn'],
+    };
+
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
       env.JWT_SECRET,
-      { expiresIn: env.JWT_EXPIRES_IN } as SignOptions
+      signOptions
     );
 
     res.cookie('token', token, {
