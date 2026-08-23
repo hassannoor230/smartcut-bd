@@ -1,13 +1,4 @@
 {
-  "version": 2,
-  "rewrites": [
-    {
-      "source": "/api",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "/api/index"
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2
 }
