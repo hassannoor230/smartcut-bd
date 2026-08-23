@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -9,6 +10,8 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { successResponse } from './utils/apiResponse.js';
 
 const app = express();
+
+const clientDistPath = path.join(__dirname, '../../client/dist');
 
 // Security
 app.use(
@@ -51,23 +54,18 @@ app.use(mongoSanitize());
 // Routes
 app.use('/api', routes);
 
-// Root endpoint
-app.get('/', (_req, res) => {
-  return successResponse(res, {
-    name: 'Smartcut Backend API',
-    version: '1.0.0',
-    status: 'online',
-    api: '/api',
-    health: '/api/health',
-  }, 'Smartcut Backend API');
+// Serve client static files
+app.use(express.static(clientDistPath));
+
+app.get('/favicon.ico', (_req, res) => res.redirect('/favicon.svg'));
+app.get('/favicon.png', (_req, res) => res.redirect('/favicon.svg'));
+
+// SPA fallback - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ message: 'Not Found' });
+  }
+  res.sendFile(path.join(clientDistPath, 'index.html'));
 });
-
-// Favicon - return 204 No Content to avoid 404s
-app.get('/favicon.ico', (_req, res) => res.status(204).end());
-app.get('/favicon.png', (_req, res) => res.status(204).end());
-
-// 404 & Error
-app.use(notFoundHandler);
-app.use(errorHandler);
 
 export default app;
