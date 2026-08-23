@@ -75,8 +75,7 @@ app.use('/api', routes);
 // Serve client static files
 app.use(express.static(clientDistPath));
 
-app.get('/favicon.ico', (_req, res) => res.redirect('/favicon.svg'));
-app.get('/favicon.png', (_req, res) => res.redirect('/favicon.svg'));
+app.get(['/favicon.ico', '/favicon.png', '/favicon.svg'], (_req, res) => res.status(204).end());
 
 // SPA fallback - serve index.html for all non-API routes
 app.get('*', (req, res) => {
