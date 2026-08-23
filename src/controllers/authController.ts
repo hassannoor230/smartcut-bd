@@ -77,6 +77,7 @@ export async function login(req: AuthRequest, res: Response, next: NextFunction)
         email: admin.email,
         role: admin.role,
       },
+      token,
     }, 'Login successful');
   } catch (error) {
     next(error);
