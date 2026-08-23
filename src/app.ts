@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
@@ -11,7 +12,21 @@ import { successResponse } from './utils/apiResponse.js';
 
 const app = express();
 
-const clientDistPath = path.join(__dirname, '../../client/dist');
+const clientDistPath = (() => {
+  const cwd = process.cwd();
+  const candidates = [
+    path.join(cwd, 'client', 'dist'),
+    path.join(cwd, '..', 'client', 'dist'),
+  ];
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(path.join(candidate, 'index.html'))) {
+        return candidate;
+      }
+    } catch {}
+  }
+  return candidates[0];
+})();
 
 // Security
 app.use(
