@@ -43,9 +43,12 @@ const allowedOrigins = [
 ];
 
 if (env.CLIENT_URL) {
-  if (!allowedOrigins.includes(env.CLIENT_URL)) {
-    allowedOrigins.push(env.CLIENT_URL);
-  }
+  env.CLIENT_URL.split(',').forEach((origin) => {
+    const normalized = origin.trim().replace(/\/$/, '');
+    if (normalized && !allowedOrigins.includes(normalized)) {
+      allowedOrigins.push(normalized);
+    }
+  });
 }
 
 app.use(
