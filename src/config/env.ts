@@ -21,3 +21,27 @@ export const env = {
 };
 
 export const isProduction = env.NODE_ENV === 'production';
+
+/**
+ * Validate critical environment variables for production
+ * In production, JWT_SECRET must be explicitly set (not using default)
+ * This prevents 401 authentication failures due to mismatched secrets
+ */
+export function validateAuthConfig() {
+  if (isProduction) {
+    if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'dev-secret-change-me') {
+      throw new Error(
+        'CRITICAL: JWT_SECRET not properly configured in production. ' +
+        'Set JWT_SECRET in Vercel Environment Variables. ' +
+        'Use: openssl rand -hex 32'
+      );
+    }
+    if (!process.env.COOKIE_SECRET || process.env.COOKIE_SECRET === 'cookie-secret-change-me') {
+      throw new Error(
+        'CRITICAL: COOKIE_SECRET not properly configured in production. ' +
+        'Set COOKIE_SECRET in Vercel Environment Variables. ' +
+        'Use: openssl rand -hex 16'
+      );
+    }
+  }
+}

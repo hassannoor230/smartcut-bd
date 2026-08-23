@@ -8,6 +8,30 @@ import { successResponse } from '../utils/apiResponse.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { env, isProduction } from '../config/env.js';
 
+/**
+ * Admin Login Endpoint
+ * 
+ * Flow:
+ * 1. Validate email and password with Zod schema
+ * 2. Find admin by email (case-insensitive)
+ * 3. Compare password with bcrypt hash
+ * 4. Sign JWT with admin ID and role
+ * 5. Set HttpOnly cookie with JWT
+ * 6. Return admin info (NO token in response)
+ * 
+ * HttpOnly Cookie Authentication:
+ * - Token is stored in HttpOnly cookie (inaccessible to JavaScript)
+ * - Browser automatically sends cookie with credentials: true
+ * - Protected routes extract token from cookie in auth middleware
+ * - Cookie settings:
+ *   - httpOnly: true (security - prevent XSS)
+ *   - secure: true (production only - HTTPS required)
+ *   - sameSite: 'none' (production only - allow cross-domain)
+ *   - maxAge: 7 days
+ * 
+ * CRITICAL: JWT_SECRET must be configured in production (Vercel)
+ * If JWT_SECRET is not set, token verification will fail → 401
+ */
 export async function login(req: AuthRequest, res: Response, next: NextFunction) {
   try {
     const { email, password } = loginSchema.parse(req.body);
@@ -29,17 +53,20 @@ export async function login(req: AuthRequest, res: Response, next: NextFunction)
       expiresIn: env.JWT_EXPIRES_IN as SignOptions['expiresIn'],
     };
 
+    // Sign JWT with admin ID and role
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
       env.JWT_SECRET,
       signOptions
     );
 
+    // Set HttpOnly cookie with JWT
+    // Browser will automatically send this cookie with requests
     res.cookie('token', token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,              // Prevent access from JavaScript (security)
+      secure: isProduction,         // HTTPS only in production
+      sameSite: isProduction ? 'none' : 'lax', // Cross-domain cookies in production
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     return successResponse(res, {
@@ -55,11 +82,23 @@ export async function login(req: AuthRequest, res: Response, next: NextFunction)
   }
 }
 
+/**
+ * Admin Logout Endpoint
+ * Clears the authentication cookie
+ */
 export async function logout(_req: AuthRequest, res: Response) {
   res.clearCookie('token');
   return successResponse(res, null, 'Logged out successfully');
 }
 
+/**
+ * Get Current Admin Endpoint
+ * Returns authenticated admin info from req.admin (set by requireAuth middleware)
+ * 
+ * This endpoint tests whether authentication is working correctly.
+ * If it returns 401, the issue is in the authentication middleware or
+ * the JWT_SECRET configuration (mismatch or missing in production).
+ */
 export async function me(req: AuthRequest, res: Response, next: NextFunction) {
   try {
     if (!req.admin) {
