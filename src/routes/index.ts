@@ -8,6 +8,9 @@ import { uploadReceipt, handleUploadReceipt } from '../controllers/uploadControl
 
 const router = Router();
 
+// API root
+router.get('/', publicCtrl.apiRoot);
+
 // Health
 router.get('/health', publicCtrl.health);
 

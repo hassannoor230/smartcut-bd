@@ -6,6 +6,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import { env, isProduction } from './config/env.js';
 import routes from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { successResponse } from './utils/apiResponse.js';
 
 const app = express();
 
@@ -49,6 +50,21 @@ app.use(mongoSanitize());
 
 // Routes
 app.use('/api', routes);
+
+// Root endpoint
+app.get('/', (_req, res) => {
+  return successResponse(res, {
+    name: 'Smartcut Backend API',
+    version: '1.0.0',
+    status: 'online',
+    api: '/api',
+    health: '/api/health',
+  }, 'Smartcut Backend API');
+});
+
+// Favicon - return 204 No Content to avoid 404s
+app.get('/favicon.ico', (_req, res) => res.status(204).end());
+app.get('/favicon.png', (_req, res) => res.status(204).end());
 
 // 404 & Error
 app.use(notFoundHandler);

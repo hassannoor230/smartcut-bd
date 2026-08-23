@@ -170,3 +170,22 @@ export async function createContact(req: Request, res: Response, next: NextFunct
 export async function health(_req: Request, res: Response) {
   return successResponse(res, { status: 'ok' }, 'API is running');
 }
+
+export async function apiRoot(_req: Request, res: Response) {
+  return successResponse(res, {
+    name: 'Smartcut API',
+    version: '1.0.0',
+    status: 'online',
+    endpoints: {
+      health: '/api/health',
+      services: '/api/services',
+      gallery: '/api/gallery',
+      reviews: '/api/reviews',
+      faqs: '/api/faqs',
+      business: '/api/business',
+      openingHours: '/api/opening-hours',
+      appointments: '/api/appointments',
+      contact: '/api/contact',
+    },
+  }, 'Smartcut API is running');
+}
