@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Smartcut Rahwali Gujranwala Backend API",
   "main": "dist/server.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "npx tsc",
+    "build": "tsc",
     "start": "node dist/server.js",
     "create-admin": "tsx src/scripts/createAdmin.ts",
     "seed": "tsx src/scripts/seed.ts"

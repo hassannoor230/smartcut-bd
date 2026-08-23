@@ -50,4 +50,5 @@ AppointmentSchema.index({ status: 1 });
 AppointmentSchema.index({ preferredDate: 1 });
 AppointmentSchema.index({ createdAt: -1 });
 
-export const Appointment = mongoose.model<IAppointment>('Appointment', AppointmentSchema);
+export const Appointment =
+  mongoose.models.Appointment || mongoose.model<IAppointment>('Appointment', AppointmentSchema);

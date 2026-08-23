@@ -59,4 +59,6 @@ const BusinessSettingsSchema = new Schema<IBusinessSettings>(
   { timestamps: true }
 );
 
-export const BusinessSettings = mongoose.model<IBusinessSettings>('BusinessSettings', BusinessSettingsSchema);
+export const BusinessSettings =
+  mongoose.models.BusinessSettings ||
+  mongoose.model<IBusinessSettings>('BusinessSettings', BusinessSettingsSchema);

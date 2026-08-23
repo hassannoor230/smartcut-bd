@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface DayHours {
   isOpen: boolean;
-  openTime?: string; // HH:mm
+  openTime?: string;
   closeTime?: string;
   is24Hours?: boolean;
 }
@@ -15,7 +15,7 @@ export interface IOpeningHours extends Document {
   friday: DayHours;
   saturday: DayHours;
   sunday: DayHours;
-  note?: string; // e.g. [CONFIRM OPENING HOURS]
+  note?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -44,4 +44,5 @@ const OpeningHoursSchema = new Schema<IOpeningHours>(
   { timestamps: true }
 );
 
-export const OpeningHours = mongoose.model<IOpeningHours>('OpeningHours', OpeningHoursSchema);
+export const OpeningHours =
+  mongoose.models.OpeningHours || mongoose.model<IOpeningHours>('OpeningHours', OpeningHoursSchema);

@@ -5,7 +5,7 @@ export interface IService extends Document {
   slug: string;
   description: string;
   price: number | null;
-  duration: number | null; // minutes
+  duration: number | null;
   category: string;
   image?: string;
   featured: boolean;
@@ -36,4 +36,4 @@ const ServiceSchema = new Schema<IService>(
 ServiceSchema.index({ active: 1, sortOrder: 1 });
 ServiceSchema.index({ featured: 1 });
 
-export const Service = mongoose.model<IService>('Service', ServiceSchema);
+export const Service = mongoose.models.Service || mongoose.model<IService>('Service', ServiceSchema);

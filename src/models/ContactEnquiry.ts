@@ -32,4 +32,6 @@ const ContactEnquirySchema = new Schema<IContactEnquiry>(
 ContactEnquirySchema.index({ status: 1 });
 ContactEnquirySchema.index({ createdAt: -1 });
 
-export const ContactEnquiry = mongoose.model<IContactEnquiry>('ContactEnquiry', ContactEnquirySchema);
+export const ContactEnquiry =
+  mongoose.models.ContactEnquiry ||
+  mongoose.model<IContactEnquiry>('ContactEnquiry', ContactEnquirySchema);

@@ -27,4 +27,4 @@ const AdminSchema = new Schema<IAdmin>(
 
 AdminSchema.index({ email: 1 });
 
-export const Admin = mongoose.model<IAdmin>('Admin', AdminSchema);
+export const Admin = mongoose.models.Admin || mongoose.model<IAdmin>('Admin', AdminSchema);

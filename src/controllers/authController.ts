@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { AuthRequest } from '../middleware/auth.js';
 import { Admin } from '../models/Admin.js';
 import { loginSchema } from '../validators/index.js';
@@ -28,7 +28,7 @@ export async function login(req: AuthRequest, res: Response, next: NextFunction)
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
       env.JWT_SECRET,
-      { expiresIn: env.JWT_EXPIRES_IN as string | number }
+      { expiresIn: env.JWT_EXPIRES_IN } as SignOptions
     );
 
     res.cookie('token', token, {

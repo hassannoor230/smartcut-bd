@@ -32,4 +32,4 @@ const GallerySchema = new Schema<IGallery>(
 GallerySchema.index({ active: 1, sortOrder: 1 });
 GallerySchema.index({ featured: 1 });
 
-export const Gallery = mongoose.model<IGallery>('Gallery', GallerySchema);
+export const Gallery = mongoose.models.Gallery || mongoose.model<IGallery>('Gallery', GallerySchema);

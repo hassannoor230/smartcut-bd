@@ -21,4 +21,4 @@ const FAQSchema = new Schema<IFAQ>(
 
 FAQSchema.index({ active: 1, sortOrder: 1 });
 
-export const FAQ = mongoose.model<IFAQ>('FAQ', FAQSchema);
+export const FAQ = mongoose.models.FAQ || mongoose.model<IFAQ>('FAQ', FAQSchema);

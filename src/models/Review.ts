@@ -29,4 +29,4 @@ const ReviewSchema = new Schema<IReview>(
 
 ReviewSchema.index({ active: 1, featured: 1 });
 
-export const Review = mongoose.model<IReview>('Review', ReviewSchema);
+export const Review = mongoose.models.Review || mongoose.model<IReview>('Review', ReviewSchema);
