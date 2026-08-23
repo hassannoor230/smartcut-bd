@@ -66,6 +66,7 @@ export async function login(req: AuthRequest, res: Response, next: NextFunction)
       httpOnly: true,              // Prevent access from JavaScript (security)
       secure: isProduction,         // HTTPS only in production
       sameSite: isProduction ? 'none' : 'lax', // Cross-domain cookies in production
+      path: '/',                    // CRITICAL: make cookie available to all routes
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -87,7 +88,7 @@ export async function login(req: AuthRequest, res: Response, next: NextFunction)
  * Clears the authentication cookie
  */
 export async function logout(_req: AuthRequest, res: Response) {
-  res.clearCookie('token');
+  res.clearCookie('token', { path: '/' });
   return successResponse(res, null, 'Logged out successfully');
 }
 

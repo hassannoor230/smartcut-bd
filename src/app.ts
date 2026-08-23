@@ -86,4 +86,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
+// Global error handler (must be registered after all routes)
+app.use(errorHandler);
+
 export default app;
